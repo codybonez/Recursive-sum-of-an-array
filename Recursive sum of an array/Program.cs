@@ -39,7 +39,7 @@ namespace Recursive_sum_of_an_array
 
             Menu();
 
-
+            // TODO: Select which array do you want to use for testing
 
         
 
@@ -50,10 +50,12 @@ namespace Recursive_sum_of_an_array
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 string menu = " ";
-
+                
+                
 
                 while (menu != "Exit")
                 {
+                    
                     Console.WriteLine("\nSelect what type of sorting algorithm to sort data with.\nType /Help to get a list of commands.\n");
                     menu = Console.ReadLine();
                     switch (menu)
@@ -66,8 +68,14 @@ namespace Recursive_sum_of_an_array
 
                         case "BubbleSort":
                             stopwatch.Restart();
-                            stopwatch.Start();
-                            bubbleSort(PartialArray());
+                            stopwatch.Start();  
+                            bubbleSort(GenerateRandomArray(100000, 1, 100000));
+                            // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
+                            // results vary depending on usage of console write line
+                            // Fully Random Array Time: 34.66 
+                            // Partial Array Time: 12.74
+                            // Reverse Array Time: 4.81
+                            // Standard Array Time: 4.78
 
                             Console.WriteLine("Algorithm: BubbleSort");
                             stopwatch.Stop();
@@ -81,7 +89,14 @@ namespace Recursive_sum_of_an_array
                             stopwatch.Restart();
                             stopwatch.Start();
                             // Merge Sort Algorithm
-                            mergeSort(PartialArray(), 1, PartialArray().Length - 1);
+
+                            mergeSort(StandardArray(), 1, 99999);
+                            // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
+                            // results vary depending on usage of console write line
+                            // Fully Random Array Time: 04.90
+                            // Partial Array Time: 04.73
+                            // Reverse Array Time: 04.62
+                            // Standard Array Time: 04.67
                             stopwatch.Stop();
                             Console.WriteLine("Algorithm: MergeSort");
                             DisplayRuntime(stopwatch);
@@ -94,8 +109,15 @@ namespace Recursive_sum_of_an_array
                             // fastest Sorting method uses partition. Both merge and quick sort use Divide and Conquer method.
                             stopwatch.Start();
                             // Quick Sort Algorithm
-                            quickSort(PartialArray(), 1, PartialArray().Length - 1);
-
+                            QuickSort(ReverseArray(), 1, 5000);
+                            // DOES NOT WORK WITH BIGGER THAN 20 THOUNSAND INTEGERS
+                           
+                            // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
+                            // results vary depending on usage of console write line
+                            // Fully Random Array Time: 
+                            // Partial Array Time: 
+                            // Reverse Array Time: 
+                            // Standard Array Time: 
                             stopwatch.Stop();
                             DisplayRuntime(stopwatch);
                             Console.WriteLine("Algorithm: QuickSort");
@@ -108,7 +130,13 @@ namespace Recursive_sum_of_an_array
                             stopwatch.Restart();
                             stopwatch.Start();
                             // Insertion Sort Algorithm
-                            insertionSort(PartialArray());
+                            insertionSort(GenerateRandomArray(100000, 1, 100000));
+                            // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
+                            // results vary depending on usage of console write line
+                            // Fully Random Array Time: 11.35
+                            // Partial Array Time: 05.58
+                            // Reverse Array Time: 04.69
+                            // Standard Array Time: 04.83
                             stopwatch.Stop();
                             Console.WriteLine("Algorithm: InsertionSort");
                             DisplayRuntime(stopwatch);
@@ -301,7 +329,7 @@ namespace Recursive_sum_of_an_array
         // Main function that sorts arr[l..r] using merge()
         static void mergeSort(int[] arr, int l, int r)
         {
-            Console.WriteLine("Sorting starts now");
+           
             if (l < r)
             {
 
@@ -319,61 +347,69 @@ namespace Recursive_sum_of_an_array
 
 
 
-        //Quick Sort
-
-        static int partition(int[] arr, int low, int high)
+        private static void QuickSort(int[] arr, int left, int right)
         {
-
-            // choose the pivot
-            int pivot = arr[high];
-
-            // index of smaller element and indicates 
-            // the right position of pivot found so far
-            int i = low - 1;
-
-            // traverse arr[low..high] and move all smaller
-            // elements to the left side. Elements from low to 
-            // i are smaller after every iteration
-            for (int j = low; j <= high - 1; j++)
+            // Check if there are elements to sort
+            if (left < right)
             {
-                if (arr[j] < pivot)
+                // Find the pivot index
+                int pivot = Partition(arr, left, right);
+
+                // Recursively sort elements on the left and right of the pivot
+                if (pivot > 1)
                 {
-                    i++;
-                    swap(arr, i, j);
+                    QuickSort(arr, left, pivot - 1);
+                }
+                if (pivot + 1 < right)
+                {
+                    QuickSort(arr, pivot + 1, right);
                 }
             }
-
-            // move pivot after smaller elements and
-            // return its position
-            swap(arr, i + 1, high);
-            return i + 1;
         }
 
-        // swap function
-        static void swap(int[] arr, int i, int j)
+        // Method to partition the array
+        public static int Partition(int[] arr, int left, int right)
         {
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
+            // Select the pivot element
+            int pivot = arr[left];
 
-        }
-
-        // The QuickSort function implementation
-        static void quickSort(int[] arr, int low, int high)
-        {
-            Console.WriteLine("Sorting starts now");
-            if (low < high)
+            // Continue until left and right pointers meet
+            while (true)
             {
+                // Move left pointer until a value greater than or equal to pivot is found
+                while (arr[left] < pivot)
+                {
+                    left++;
+                }
 
-                // pi is the partition return index of pivot
-                int pi = partition(arr, low, high);
+                // Move right pointer until a value less than or equal to pivot is found
+                while (arr[right-1] > pivot)
+                {
+                    right--;
+                }
 
-                // recursion calls for smaller elements
-                // and greater or equals elements
-                quickSort(arr, low, pi - 1);
-                quickSort(arr, pi + 1, high);
+                // If left pointer is still smaller than right pointer, swap elements
+                if (left < right)
+                {
+                    if (arr[left] == arr[right-1]) return right;
+
+                    int temp = arr[left];
+                    arr[left] = arr[right];
+                    arr[right] = temp;
+                }
+                else
+                {
+                    // Return the right pointer indicating the partitioning position
+                    return right;
+                }
             }
         }
+
+
+
+
+
+
 
 
 
@@ -386,6 +422,7 @@ namespace Recursive_sum_of_an_array
             for (int i = 0; i < length; i++)
             {
                 array[i] = rand.Next(minValue, maxValue); // Generates a random integer within the specified range
+                Console.WriteLine(array[i]);
             }
 
             return array;
