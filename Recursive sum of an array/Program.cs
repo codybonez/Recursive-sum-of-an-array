@@ -5,13 +5,14 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Recursive_sum_of_an_array
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
 
-            int[] Numbers =
+            // Smaller data;
+
+            int[] StandardNumbers =
             {
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
@@ -20,13 +21,13 @@ namespace Recursive_sum_of_an_array
 
             int[] ReverseNumbers =
             {
-                50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 
-                40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 
-                30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 
-                20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 
+                50, 49, 48, 47, 46, 45, 44, 43, 42, 41,
+                40, 39, 38, 37, 36, 35, 34, 33, 32, 31,
+                30, 29, 28, 27, 26, 25, 24, 23, 22, 21,
+                20, 19, 18, 17, 16, 15, 14, 13, 12, 11,
                 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
             };
-            int[] PartialSorted =
+            int[] PartialNumbers =
             {
                 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,35,34,33, 32, 31,
                 30, 29, 28, 27, 26, 25, 24, 23, 22, 21,
@@ -36,38 +37,20 @@ namespace Recursive_sum_of_an_array
 
 
 
-            int[] largeArr = GenerateRandomArray(100000, 1, 1000);
-            Console.WriteLine("Array Randomized");
-
-
-            TestSort(largeArr);
+            Menu();
 
 
 
-
-
-            // usage 100 thousand values
-
-
-
-
-
-
-
-
-
-
-
-
-            // Write your function to test each algorithm here
-            // algo for function
+        
 
 
             // Menu to chose what sort method you want to use.
-            void TestSort(int[] arr)
+            void Menu()
             {
 
+                Stopwatch stopwatch = Stopwatch.StartNew();
                 string menu = " ";
+
 
                 while (menu != "Exit")
                 {
@@ -82,50 +65,55 @@ namespace Recursive_sum_of_an_array
                             break;
 
                         case "BubbleSort":
+                            stopwatch.Restart();
                             stopwatch.Start();
-                            bubbleSort(largeArr, largeArr.Length);
-                            stopwatch.Stop();
+                            bubbleSort(PartialArray());
+
                             Console.WriteLine("Algorithm: BubbleSort");
+                            stopwatch.Stop();
                             DisplayRuntime(stopwatch);
                             stopwatch.Reset();
-                            largeArr = GenerateRandomArray(100000, 1, 1000);
+
 
                             break;
 
                         case "MergeSort":
+                            stopwatch.Restart();
                             stopwatch.Start();
                             // Merge Sort Algorithm
-                            mergeSort(largeArr, 1, largeArr.Length - 1);
+                            mergeSort(PartialArray(), 1, PartialArray().Length - 1);
                             stopwatch.Stop();
                             Console.WriteLine("Algorithm: MergeSort");
                             DisplayRuntime(stopwatch);
                             stopwatch.Reset();
-                            largeArr = GenerateRandomArray(100000, 1, 1000);
+
                             break;
 
                         case "QuickSort":
+                            stopwatch.Restart();
                             // fastest Sorting method uses partition. Both merge and quick sort use Divide and Conquer method.
                             stopwatch.Start();
                             // Quick Sort Algorithm
-                            quickSort(largeArr, 1, largeArr.Length - 1);
-                        
+                            quickSort(PartialArray(), 1, PartialArray().Length - 1);
+
                             stopwatch.Stop();
                             DisplayRuntime(stopwatch);
                             Console.WriteLine("Algorithm: QuickSort");
-                            
+
                             stopwatch.Reset();
-                            largeArr = GenerateRandomArray(100000, 1, 1000);
+
                             break;
 
                         case "InsertionSort":
+                            stopwatch.Restart();
                             stopwatch.Start();
                             // Insertion Sort Algorithm
-                            insertionSort(largeArr);
+                            insertionSort(PartialArray());
                             stopwatch.Stop();
                             Console.WriteLine("Algorithm: InsertionSort");
                             DisplayRuntime(stopwatch);
                             stopwatch.Reset();
-                            largeArr = GenerateRandomArray(100000, 1, 1000);
+                            //  largeArr = GenerateRandomArray(100000, 1, 1000);
                             break;
                         case "Exit":
                             Console.WriteLine("Exiting Program.");
@@ -136,12 +124,6 @@ namespace Recursive_sum_of_an_array
                             break;
                     }
 
-
-
-
-
-
-
                 }
 
 
@@ -151,14 +133,51 @@ namespace Recursive_sum_of_an_array
             }
 
 
+            #region functions  
+            int linearAdding(int total)
+            {
+                total = 0;
+                for (int i = 0; i < StandardNumbers.Length; i++)
+                {
+                    total += StandardNumbers[i];
+
+                    Console.WriteLine($"Counter at {i}");
+
+                }
+
+                return total;
+
+            }
+
+
+            int RecursiveADDING(int t)
+            {
+                // Issue: Indecies of the array do not go down so the base case does not catch it 
+                // fixed the array going up
+
+
+                if (t < 0)
+                {
+                    return 0;
+                }
+                Console.WriteLine($"Counter at {t}");
+                return StandardNumbers[t] + RecursiveADDING(t - 1);
+            }
+
+
+
+
+
             // Write individual functions for each algorithm here (Bubble, Insertion, Merge, and Quick sort)
 
-         
 
 
-            static void bubbleSort(int[] arr, int n)
+
+            static void bubbleSort(int[] arr)
             {
+                Console.WriteLine("Sorting starts now");
                 int i, j, temp;
+                int n = arr.Length;
                 bool swapped;
                 // outer loop
                 for (i = 0; i < n - 1; i++)
@@ -177,6 +196,7 @@ namespace Recursive_sum_of_an_array
                             arr[j] = arr[j + 1];
                             arr[j + 1] = temp;
                             swapped = true;
+
                         }
                     }
 
@@ -186,13 +206,14 @@ namespace Recursive_sum_of_an_array
                         break;
                 }
             }
-        }
+            }
+        
 
-            // Insertion Sort
+        // Insertion Sort
 
-            public static void insertionSort(int[] arr)
+        public static void insertionSort(int[] arr)
         {
-
+            Console.WriteLine("Sorting starts now");
             int n = arr.Length;
 
 
@@ -201,7 +222,7 @@ namespace Recursive_sum_of_an_array
                 int key = arr[i];
                 int j = i - 1;
 
-            
+
                 while (j >= 0 && arr[j] > key)
                 {
                     arr[j + 1] = arr[j];
@@ -280,7 +301,7 @@ namespace Recursive_sum_of_an_array
         // Main function that sorts arr[l..r] using merge()
         static void mergeSort(int[] arr, int l, int r)
         {
-
+            Console.WriteLine("Sorting starts now");
             if (l < r)
             {
 
@@ -334,12 +355,13 @@ namespace Recursive_sum_of_an_array
             int temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
-            
+
         }
 
         // The QuickSort function implementation
         static void quickSort(int[] arr, int low, int high)
         {
+            Console.WriteLine("Sorting starts now");
             if (low < high)
             {
 
@@ -356,106 +378,98 @@ namespace Recursive_sum_of_an_array
 
 
         // function
-        static int[] GenerateRandomArray(int length, int minValue, int maxValue)
-            {
-                Random rand = new Random();
-                int[] array = new int[length];
+        static public int[] GenerateRandomArray(int length, int minValue, int maxValue)
+        {
+            Random rand = new Random();
+            int[] array = new int[length];
 
-                for (int i = 0; i < length; i++)
-                {
-                    array[i] = rand.Next(minValue, maxValue); // Generates a random integer within the specified range
-                }
-                
-                return array;
+            for (int i = 0; i < length; i++)
+            {
+                array[i] = rand.Next(minValue, maxValue); // Generates a random integer within the specified range
             }
 
-            static void DisplayRuntime(Stopwatch stopwatch)
-            {
-                TimeSpan ts = stopwatch.Elapsed;
-
-                // Format and display the TimeSpan value.
-                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                    ts.Hours, ts.Minutes, ts.Seconds,
-                    ts.Milliseconds / 10);
-                Console.WriteLine("Time Taken: " + elapsedTime);
-            }
-
-
-
-          
-        
-            int linearAdding(int total)
-            {
-                total = 0;
-                for (int i = 0; i < Numbers.Length; i++)
-                {
-                   total += Numbers[i];
-
-                    Console.WriteLine($"Counter at {i}");
-
-                }
-
-                return total;
-
-            }
-
-
-             int RecursiveADDING(int t )
-             {
-                // Issue: Indecies of the array do not go down so the base case does not catch it 
-                // fixed the array going up
-
-              
-                if (t < 0)
-                {
-                    return 0;
-                }
-                Console.WriteLine($"Counter at {t}");
-                return Numbers[t] + RecursiveADDING(t-1);
-             }
-
-
-            // Sorting Algorithms
-
-
-
-
-         
-
-
-
-
-
-
-
-
-
-        //    static void DisplayRuntime(Stopwatch stopwatch)
-        //    {
-        //        TimeSpan ts = stopwatch.Elapsed;
-
-        //        // Format and display the TimeSpan value.
-        //        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-        //            ts.Hours, ts.Minutes, ts.Seconds,
-        //            ts.Milliseconds / 10);
-        //        Console.WriteLine("Time Taken: " + elapsedTime);
-        //        stopwatch.Reset();
-        //    }
-
-        //    stopwatch.Start();
-           
-        //    Console.WriteLine(RecursiveADDING(Numbers.Length -1 ));
-        //    stopwatch.Stop();
-        //    Console.WriteLine("Recursive");
-        //    DisplayRuntime(stopwatch);
-        //    stopwatch.Start();
-           
-        //Console.WriteLine(linearAdding(Numbers.Length-1));
-        //    stopwatch.Stop();
-        //    Console.WriteLine("Linear");
-        //    DisplayRuntime(stopwatch);
-
-
+            return array;
         }
+
+        static void DisplayRuntime(Stopwatch stopwatch)
+        {
+            TimeSpan ts = stopwatch.Elapsed;
+
+            // Format and display the TimeSpan value.
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Console.WriteLine("Time Taken: " + elapsedTime);
+        }
+
+
+
+
+
+
+
+        // Sorting Algorithms
+
+
+
+        public static int[] PartialArray()
+        {
+
+            int[] arrPartial = new int[100000];
+            for (int i = 0; i <= 33333; i++)
+            {
+                Console.WriteLine(i);
+            }
+            for (int j = 66666; j >= 33334; j--)
+            {
+                Console.WriteLine(j);
+
+            }
+            Random rand = new Random();
+            for (int k = 66667; k < 100000; k++)
+            {
+
+                arrPartial[k] = rand.Next(66667, 100000);
+                Console.WriteLine(arrPartial[k]);
+
+            }
+
+            return arrPartial;
+        }
+
+
+
+
+        public static int[] ReverseArray()
+        {
+            int[] arrReverse = new int[100000];
+            for (int j = 100000; j >= 0; j--)
+            {
+                Console.WriteLine(j);
+
+            }
+            return arrReverse;
+        }
+        public static int[] StandardArray()
+        {
+            int[] arrNormal = new int[100000];
+            for (int i = 0; i <= 100000; i++)
+            {
+                Console.WriteLine(i);
+            }
+            return arrNormal;
+        }
+
+
+
+
+        #endregion
+
+
+
+
+    
     }
+}
+    
 
