@@ -37,11 +37,9 @@ namespace Recursive_sum_of_an_array
 
 
 
-            Menu();
+               Menu();
 
-            // TODO: Select which array do you want to use for testing
-
-        
+           
 
 
             // Menu to chose what sort method you want to use.
@@ -68,8 +66,11 @@ namespace Recursive_sum_of_an_array
 
                         case "BubbleSort":
                             stopwatch.Restart();
-                            stopwatch.Start();  
-                            bubbleSort(GenerateRandomArray(100000, 1, 100000));
+                            stopwatch.Start();
+                            // 06:51.68 one through ten duplicate
+                            // 00:00 half duplicates
+                            // 00:00 no duplicates
+                            bubbleSort(arrayBuilder.halfDuplicates());
                             // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
                             // results vary depending on usage of console write line
                             // Fully Random Array Time: 34.66 
@@ -89,8 +90,12 @@ namespace Recursive_sum_of_an_array
                             stopwatch.Restart();
                             stopwatch.Start();
                             // Merge Sort Algorithm
+                            // these don't have console.writeline in them
+                            // oneThroughTenDuplicates Time Taken: 00:00:00.09
+                            // halfDuplicates Time Taken: 00:00:00.11 
+                            // noDuplicates Time Taken: 00:00:00.07
 
-                            mergeSort(StandardArray(), 1, 99999);
+                            mergeSort(arrayBuilder.halfDuplicates(), 0, arrayBuilder.halfDuplicates().Length-1);
                             // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
                             // results vary depending on usage of console write line
                             // Fully Random Array Time: 04.90
@@ -106,10 +111,15 @@ namespace Recursive_sum_of_an_array
 
                         case "QuickSort":
                             stopwatch.Restart();
-                            // fastest Sorting method uses partition. Both merge and quick sort use Divide and Conquer method.
+                            // fastest Sorting method uses pivoting. Both merge and quick sort use Divide and Conquer method.
+
+
+
+
+                            
                             stopwatch.Start();
                             // Quick Sort Algorithm
-                            QuickSort(ReverseArray(), 1, 5000);
+                            QuickSort(arrayBuilder.noDuplicates(), 0, arrayBuilder.noDuplicates().Length-1);
                             // DOES NOT WORK WITH BIGGER THAN 20 THOUNSAND INTEGERS
                            
                             // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
@@ -128,9 +138,12 @@ namespace Recursive_sum_of_an_array
 
                         case "InsertionSort":
                             stopwatch.Restart();
+                            // 00:02:41.56 one through ten duplicate
+                            // 00:00 half duplicates
+                            // 00:00 no duplicates
                             stopwatch.Start();
                             // Insertion Sort Algorithm
-                            insertionSort(GenerateRandomArray(100000, 1, 100000));
+                            insertionSort(arrayBuilder.halfDuplicates());
                             // ALL DATA IS 100 THOUSAND INTEGERS AND IS DISPLAYING
                             // results vary depending on usage of console write line
                             // Fully Random Array Time: 11.35
@@ -159,7 +172,7 @@ namespace Recursive_sum_of_an_array
 
 
             }
-
+          
 
             #region functions  
             int linearAdding(int total)
@@ -334,14 +347,14 @@ namespace Recursive_sum_of_an_array
             {
 
                 // Find the middle point
-                int m = l + (r - l) / 2;
+                int m = l + ((r - l) / 2);
 
                 // Sort first and second halves
                 mergeSort(arr, l, m);
                 mergeSort(arr, m + 1, r);
 
                 // Merge the sorted halves
-                merge(arr, l, m, r);
+                merge(arr, l, m-1, r);
             }
         }
 
@@ -363,6 +376,10 @@ namespace Recursive_sum_of_an_array
                 if (pivot + 1 < right)
                 {
                     QuickSort(arr, pivot + 1, right);
+                }
+                else
+                {
+                    return;
                 }
             }
         }
